@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff, WidthFull } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { signIn, getProfile } from '@/lib/api';
@@ -62,13 +62,21 @@ export default function LoginPage() {
   };
 
   return (
-    <Grid container sx={{ minHeight: '100vh', width: '100vw' }}>
-      {/* Left Side - Image */}
-      <Grid item xs={12} md={6}>
+    <>
+      {/* Main layout */}
+      <Grid
+        container
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, // 1 column on mobile, 2 columns on desktop
+          width: '100vw',
+          margin: 0,
+          padding: 0,
+        }}>
+        {/* Left Side - Image */}
         <Box
           sx={{
-            height: '100%',
-            background: '#f5f5f5',
+            backgroundColor: '#f5f5f5',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -77,24 +85,27 @@ export default function LoginPage() {
           <img
             src="/login-products.png"
             alt="Beije Product Group"
-            style={{ maxWidth: '100%', borderRadius: 8 }}
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              objectFit: 'contain',
+              borderRadius: 8,
+            }}
           />
         </Box>
-      </Grid>
 
-      {/* Right Side - Form */}
-      <Grid item xs={12} md={6}>
+        {/* Right Side - Form */}
         <Box
+          component="form"
+          onSubmit={handleLogin}
           sx={{
-            px: 6,
-            py: 8,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
+            px: { xs: 3, md: 6 },
+            py: 8,
             height: '100%',
-          }}
-          component="form"
-          onSubmit={handleLogin}>
+          }}>
           <Typography variant="h5" fontWeight="bold" mb={1}>
             Merhaba
           </Typography>
@@ -137,7 +148,7 @@ export default function LoginPage() {
             sx={{ mb: 2 }}
           />
 
-          {/* Password with Visibility Toggle */}
+          {/* Password */}
           <TextField
             fullWidth
             label="Şifren"
@@ -182,22 +193,27 @@ export default function LoginPage() {
             }}>
             {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
           </Button>
+
+          {/* Snackbar for errors */}
+          <Snackbar
+            open={!!error}
+            autoHideDuration={4000}
+            onClose={() => setError('')}>
+            <MuiAlert
+              severity="error"
+              onClose={() => setError('')}
+              elevation={6}
+              variant="filled">
+              {error}
+            </MuiAlert>
+          </Snackbar>
         </Box>
-        <Snackbar
-          open={!!error}
-          autoHideDuration={4000}
-          onClose={() => setError('')}>
-          <MuiAlert
-            severity="error"
-            onClose={() => setError('')}
-            elevation={6}
-            variant="filled">
-            {error}
-          </MuiAlert>
-        </Snackbar>
       </Grid>
 
-      <Footer />
-    </Grid>
+      {/* Footer */}
+      <Box sx={{ width: '100vw', overflowX: 'hidden' }}>
+        <Footer />
+      </Box>
+    </>
   );
 }
