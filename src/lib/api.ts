@@ -20,3 +20,16 @@ export const getProfile = () => {
 export const getProductsAndPackets = () => {
   return API.get('/packets-and-products');
 };
+
+const BASE_URL = 'https://3a631b5b-9b1b-4b7f-b736-00d1ce4a1505.mock.pstmn.io';
+export const verifyPacketPrice = async (
+  packet: { _id: string; count: number }[],
+  totalPrice: number,
+) => {
+  const response = await axios.post(`${BASE_URL}/verify-packet-price`, {
+    packet,
+    totalPrice,
+  });
+
+  return response.data;
+};

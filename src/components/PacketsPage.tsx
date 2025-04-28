@@ -12,18 +12,49 @@ import {
   IconButton,
   Divider,
   Button,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-
+import { verifyPacketPrice } from '@/lib/api';
 export default function PacketsPage() {
   const { products } = useSelector((state: RootState) => state.products);
 
   const [tab, setTab] = useState(0);
   const [cart, setCart] = useState<Record<string, number>>({}); // { subProductId: quantity }
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({ open: false, message: '', severity: 'success' });
+
+  const handleCheckout = async () => {
+    const packet = Object.entries(cart).map(([subProductId, count]) => ({
+      _id: subProductId,
+      count,
+    }));
+
+    try {
+      await verifyPacketPrice(packet, totalPrice);
+      setSnackbar({
+        open: true,
+        message: 'Paket başarıyla doğrulandı!',
+        severity: 'success',
+      });
+      setCart({}); // clear cart
+    } catch (error) {
+      console.error(error);
+      setSnackbar({
+        open: true,
+        message: 'Doğrulama başarısız oldu.',
+        severity: 'error',
+      });
+    }
+  };
 
   // Calculate total price
   const totalPrice = products.reduce((acc, product) => {
@@ -144,9 +175,23 @@ export default function PacketsPage() {
           color="primary"
           size="large"
           disabled={totalPrice === 0}
+          onClick={handleCheckout}
           sx={{ textTransform: 'none', borderRadius: 6 }}>
           Sepete Ekle ({totalPrice}₺)
         </Button>
+
+        {/* Snackbar feedback */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}>
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </Box>
   );
