@@ -3,11 +3,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getProductsAndPackets } from '@/lib/api';
 
-interface Product {
+export interface SubProduct {
+  _id: string;
+  name: string;
+  price: number;
+}
+
+export interface Product {
   _id: string;
   title: string;
   image: string;
   type: string;
+  subProducts: SubProduct[];
 }
 
 interface Packet {

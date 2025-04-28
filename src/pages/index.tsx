@@ -60,7 +60,7 @@ export default function LoginPage() {
       const profileRes = await getProfile(); // x-auth-token should NOT be sent
       dispatch(setProfile(profileRes.data.data.profileInfo));
 
-      router.push('/packets');
+      router.push('/packet');
     } catch (err: any) {
       setError('E-posta veya şifre hatalı.');
     } finally {
