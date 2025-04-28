@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowForwardIcons from '@mui/icons-material/ArrowForward';
 import { ShoppingCartOutlined, PersonOutlined } from '@mui/icons-material';
+import { useAppSelector } from '@/store/hooks'; // or your correct hooks path
 
 interface Product {
   _id: string;
@@ -20,13 +21,12 @@ interface Packet {
   image: string;
 }
 
-interface NavbarProps {
-  products: Product[];
-  packets: Packet[];
-}
-
-export default function Navbar({ products, packets }: NavbarProps) {
+export default function Navbar() {
   const [open, setOpen] = useState(false);
+
+  // Get products and packets from Redux
+  const products = useAppSelector((state) => state.products.products);
+  const packets = useAppSelector((state) => state.products.packets);
 
   return (
     <Box
@@ -34,6 +34,7 @@ export default function Navbar({ products, packets }: NavbarProps) {
       {/* Navbar */}
       <Box
         sx={{
+          height: '80px',
           maxWidth: '100vw',
           display: 'flex',
           alignItems: 'center',
@@ -61,7 +62,11 @@ export default function Navbar({ products, packets }: NavbarProps) {
               sx={{ position: 'relative' }}>
               <Typography
                 variant="body1"
-                sx={{ fontWeight: open ? 600 : 400, cursor: 'pointer' }}>
+                sx={{
+                  fontSize: '16px',
+                  fontWeight: open ? 600 : 400,
+                  cursor: 'pointer',
+                }}>
                 Tüm Ürünler
               </Typography>
 
@@ -208,7 +213,7 @@ export default function Navbar({ products, packets }: NavbarProps) {
               <Typography
                 key={i}
                 variant="body1"
-                sx={{ cursor: 'pointer', fontWeight: 400 }}>
+                sx={{ fontSize: '16px', cursor: 'pointer', fontWeight: 400 }}>
                 {tab}
               </Typography>
             ))}

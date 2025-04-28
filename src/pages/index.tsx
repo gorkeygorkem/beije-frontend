@@ -21,8 +21,6 @@ import { setToken, setProfile } from '@/store/slices/authSlice';
 import { useRouter } from 'next/router';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import Footer from '@/components/Footer';
-import Navbar from '@/components/Navbar';
 import { fetchProductsAndPackets } from '@/store/slices/productSlice';
 import { RootState, AppDispatch } from '@/store/index';
 export default function LoginPage() {
@@ -69,7 +67,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <Navbar products={products} packets={packets} />
       {/* Main layout */}
       <Grid
         container
@@ -215,11 +212,6 @@ export default function LoginPage() {
           </Snackbar>
         </Box>
       </Grid>
-
-      {/* Footer */}
-      <Box sx={{ width: '100vw', overflowX: 'hidden' }}>
-        <Footer />
-      </Box>
     </>
   );
 }

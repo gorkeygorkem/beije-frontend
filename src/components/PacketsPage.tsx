@@ -113,7 +113,14 @@ export default function PacketsPage() {
   };
 
   return (
-    <Box sx={{ px: { xs: 2, md: 12 }, py: 8, display: 'flex', gap: 6 }}>
+    <Box
+      sx={{
+        px: { xs: 2, md: 12 },
+        py: 8,
+        display: 'flex',
+        gap: 30,
+        bgcolor: 'rgba(247, 246, 245, 1)',
+      }}>
       {/* Left Side */}
       <Box sx={{ flex: 2 }}>
         <Typography variant="h5" fontWeight="bold" mb={1}>
@@ -130,6 +137,7 @@ export default function PacketsPage() {
           onChange={(e, v) => setTab(v)}
           textColor="inherit"
           indicatorColor="primary"
+          variant="fullWidth"
           sx={{ mb: 4 }}>
           <Tab
             label="Menstrual Ürünler"
@@ -140,7 +148,6 @@ export default function PacketsPage() {
             sx={{ fontWeight: 600, textTransform: 'none' }}
           />
         </Tabs>
-
         {/* Product Accordions */}
         {products
           .filter((product) =>
@@ -159,13 +166,13 @@ export default function PacketsPage() {
                 key={product._id}
                 expanded={expandedAccordions.includes(product._id)}
                 onChange={() => handleAccordionToggle(product._id)}
-                sx={{ mb: 2, borderRadius: 2 }}>
+                sx={{ mb: 2, borderRadius: '16px' }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography fontWeight="bold">{product.title}</Typography>
                   {!expandedAccordions.includes(product._id) &&
                     selectedSubProducts.length > 0 && (
                       <Typography
-                        ml={2}
+                        ml={60}
                         variant="body2"
                         color="text.secondary"
                         noWrap>
@@ -187,17 +194,22 @@ export default function PacketsPage() {
                         {subProduct.name}
                       </Typography>
                       <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        sx={{
+                          display: 'flex',
+                          border: '1px solid #ccc',
+                          borderRadius: 64,
+                          alignItems: 'center',
+                          gap: 1,
+                        }}>
                         <IconButton
-                          size="small"
-                          sx={{ border: '1px solid #ccc', borderRadius: 999 }}
+                          size="medium"
+                          disabled={!cart[subProduct._id]}
                           onClick={() => handleDecrease(subProduct._id)}>
                           <RemoveIcon />
                         </IconButton>
                         <Typography>{cart[subProduct._id] || 0}</Typography>
                         <IconButton
-                          size="small"
-                          sx={{ border: '1px solid #ccc', borderRadius: 999 }}
+                          size="medium"
                           onClick={() => handleIncrease(subProduct._id)}>
                           <AddIcon />
                         </IconButton>
@@ -214,14 +226,31 @@ export default function PacketsPage() {
       <Box
         sx={{
           flex: 1,
-          bgcolor: '#f8f8f8',
+          bgcolor: 'white',
           borderRadius: 4,
           p: 4,
           height: 'fit-content',
         }}>
-        <Typography variant="h6" fontWeight="bold" mb={2}>
-          Paketin
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+          <Typography variant="h6" fontWeight="bold">
+            Paketin
+          </Typography>
+
+          <Box
+            sx={{
+              bgcolor: 'rgba(210, 231, 224, 1)',
+              color: 'black',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              px: 2,
+              py: 1,
+              ml: 15,
+              borderRadius: 10,
+              whiteSpace: 'nowrap',
+            }}>
+            2 Ayda bir gönderim
+          </Box>
+        </Box>
 
         <Typography color="text.secondary" mb={4}>
           Kişisel ihtiyacına yönelik istediğin miktarda ürün ekleyerek kendine
