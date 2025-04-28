@@ -14,49 +14,31 @@ import {
   Button,
   Snackbar,
   Alert,
+  Card,
+  CardContent,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { verifyPacketPrice } from '@/lib/api';
+
 export default function PacketsPage() {
   const { products } = useSelector((state: RootState) => state.products);
 
   const [tab, setTab] = useState(0);
-  const [cart, setCart] = useState<Record<string, number>>({}); // { subProductId: quantity }
+  const [expandedAccordions, setExpandedAccordions] = useState<string[]>(
+    products.map((p) => p._id),
+  ); // Open all initially
+  const [cart, setCart] = useState<Record<string, number>>({});
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
     severity: 'success' | 'error';
   }>({ open: false, message: '', severity: 'success' });
 
-  const handleCheckout = async () => {
-    const packet = Object.entries(cart).map(([subProductId, count]) => ({
-      _id: subProductId,
-      count,
-    }));
-
-    try {
-      await verifyPacketPrice(packet, totalPrice);
-      setSnackbar({
-        open: true,
-        message: 'Paket başarıyla doğrulandı!',
-        severity: 'success',
-      });
-      setCart({}); // clear cart
-    } catch (error) {
-      console.error(error);
-      setSnackbar({
-        open: true,
-        message: 'Doğrulama başarısız oldu.',
-        severity: 'error',
-      });
-    }
-  };
-
-  // Calculate total price
   const totalPrice = products.reduce((acc, product) => {
     return (
       acc +
@@ -86,22 +68,77 @@ export default function PacketsPage() {
     });
   };
 
+  const handleRemoveParentProduct = (parentProductId: string) => {
+    const subProductIds =
+      products
+        .find((p) => p._id === parentProductId)
+        ?.subProducts.map((sp) => sp._id) || [];
+    setCart((prev) => {
+      const updated = { ...prev };
+      subProductIds.forEach((id) => delete updated[id]);
+      return updated;
+    });
+  };
+
+  const handleAccordionToggle = (productId: string) => {
+    setExpandedAccordions((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId],
+    );
+  };
+
+  const handleCheckout = async () => {
+    const packet = Object.entries(cart).map(([subProductId, count]) => ({
+      _id: subProductId,
+      count,
+    }));
+
+    try {
+      await verifyPacketPrice(packet, totalPrice);
+      setSnackbar({
+        open: true,
+        message: 'Paket başarıyla doğrulandı!',
+        severity: 'success',
+      });
+      setCart({});
+    } catch (error) {
+      console.error(error);
+      setSnackbar({
+        open: true,
+        message: 'Doğrulama başarısız oldu.',
+        severity: 'error',
+      });
+    }
+  };
+
   return (
     <Box sx={{ px: { xs: 2, md: 12 }, py: 8, display: 'flex', gap: 6 }}>
-      {/* Left Side - Products */}
+      {/* Left Side */}
       <Box sx={{ flex: 2 }}>
         <Typography variant="h5" fontWeight="bold" mb={1}>
           Kendi Paketini Oluştur
         </Typography>
         <Typography color="text.secondary" mb={3}>
           Döngünün uzunluğuna, kanamanın yoğunluğuna ve kullanmak istediğin
-          ürünlere göre tamamen kendine özel bir paket oluştur!
+          ürünlere göre kendine özel bir paket oluştur!
         </Typography>
 
         {/* Tabs */}
-        <Tabs value={tab} onChange={(e, v) => setTab(v)} sx={{ mb: 4 }}>
-          <Tab label="Menstrual Ürünler" />
-          <Tab label="Destekleyici Ürünler" />
+        <Tabs
+          value={tab}
+          onChange={(e, v) => setTab(v)}
+          textColor="inherit"
+          indicatorColor="primary"
+          sx={{ mb: 4 }}>
+          <Tab
+            label="Menstrual Ürünler"
+            sx={{ fontWeight: 600, textTransform: 'none' }}
+          />
+          <Tab
+            label="Destekleyici Ürünler"
+            sx={{ fontWeight: 600, textTransform: 'none' }}
+          />
         </Tabs>
 
         {/* Product Accordions */}
@@ -109,52 +146,77 @@ export default function PacketsPage() {
           .filter((product) =>
             tab === 0 ? product.type === 'Menstrual' : product.type === 'Other',
           )
-          .map((product) => (
-            <Accordion key={product._id} sx={{ mb: 2 }}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography fontWeight="bold">{product.title}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {product.subProducts.map((subProduct) => (
-                  <Box
-                    key={subProduct._id}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      mb: 2,
-                      px: 2,
-                    }}>
-                    {/* Sub Product Name */}
-                    <Typography variant="body2">{subProduct.name}</Typography>
+          .map((product) => {
+            const selectedSubProducts = product.subProducts.filter(
+              (sub) => cart[sub._id],
+            );
+            const summaryText = selectedSubProducts
+              .map((sub) => `${cart[sub._id]} ${sub.name}`)
+              .join(', ');
 
-                    {/* Quantity Controls */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconButton
-                        onClick={() => handleDecrease(subProduct._id)}>
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography>{cart[subProduct._id] || 0}</Typography>
-                      <IconButton
-                        onClick={() => handleIncrease(subProduct._id)}>
-                        <AddIcon />
-                      </IconButton>
+            return (
+              <Accordion
+                key={product._id}
+                expanded={expandedAccordions.includes(product._id)}
+                onChange={() => handleAccordionToggle(product._id)}
+                sx={{ mb: 2, borderRadius: 2 }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography fontWeight="bold">{product.title}</Typography>
+                  {!expandedAccordions.includes(product._id) &&
+                    selectedSubProducts.length > 0 && (
+                      <Typography
+                        ml={2}
+                        variant="body2"
+                        color="text.secondary"
+                        noWrap>
+                        {summaryText}
+                      </Typography>
+                    )}
+                </AccordionSummary>
+                <AccordionDetails>
+                  {product.subProducts.map((subProduct) => (
+                    <Box
+                      key={subProduct._id}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        mb: 2,
+                      }}>
+                      <Typography variant="body2" noWrap>
+                        {subProduct.name}
+                      </Typography>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconButton
+                          size="small"
+                          sx={{ border: '1px solid #ccc', borderRadius: 999 }}
+                          onClick={() => handleDecrease(subProduct._id)}>
+                          <RemoveIcon />
+                        </IconButton>
+                        <Typography>{cart[subProduct._id] || 0}</Typography>
+                        <IconButton
+                          size="small"
+                          sx={{ border: '1px solid #ccc', borderRadius: 999 }}
+                          onClick={() => handleIncrease(subProduct._id)}>
+                          <AddIcon />
+                        </IconButton>
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
-              </AccordionDetails>
-            </Accordion>
-          ))}
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
       </Box>
 
-      {/* Right Side - Cart */}
+      {/* Right Side */}
       <Box
         sx={{
           flex: 1,
-          border: '1px solid #e0e0e0',
+          bgcolor: '#f8f8f8',
           borderRadius: 4,
           p: 4,
-          bgcolor: '#f8f8f8',
           height: 'fit-content',
         }}>
         <Typography variant="h6" fontWeight="bold" mb={2}>
@@ -162,25 +224,80 @@ export default function PacketsPage() {
         </Typography>
 
         <Typography color="text.secondary" mb={4}>
-          Kişisel ihtiyacına yönelik istediğin miktarda ped, günlük ped, tampon
-          veya destekleyici ürünler ekleyerek kendine özel paket
-          oluşturabilirsin.
+          Kişisel ihtiyacına yönelik istediğin miktarda ürün ekleyerek kendine
+          özel paket oluşturabilirsin.
         </Typography>
 
         <Divider sx={{ mb: 4 }} />
 
+        {/* Cart */}
+        <Box display="flex" flexDirection="column" gap={2} mb={4}>
+          {products
+            .filter((product) =>
+              product.subProducts.some((subProduct) => cart[subProduct._id]),
+            )
+            .map((product) => (
+              <Card
+                key={product._id}
+                sx={{ bgcolor: 'white', p: 2, borderRadius: 2 }}>
+                <CardContent sx={{ p: 0 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      mb: 1,
+                    }}>
+                    <Typography fontWeight="bold">{product.title}</Typography>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleRemoveParentProduct(product._id)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+
+                  {product.subProducts
+                    .filter((subProduct) => cart[subProduct._id])
+                    .map((subProduct) => (
+                      <Box
+                        key={subProduct._id}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 1,
+                        }}>
+                        <Typography variant="body2">
+                          {cart[subProduct._id]} {subProduct.name}
+                        </Typography>
+                        <Typography variant="body2">
+                          {cart[subProduct._id] * subProduct.price}₺
+                        </Typography>
+                      </Box>
+                    ))}
+                </CardContent>
+              </Card>
+            ))}
+        </Box>
+
+        {/* Checkout */}
         <Button
           fullWidth
           variant="contained"
-          color="primary"
-          size="large"
           disabled={totalPrice === 0}
           onClick={handleCheckout}
-          sx={{ textTransform: 'none', borderRadius: 6 }}>
+          sx={{
+            textTransform: 'none',
+            fontWeight: 600,
+            borderRadius: 8,
+            py: 1.5,
+            backgroundColor: 'black',
+            ':hover': { backgroundColor: '#333' },
+          }}>
           Sepete Ekle ({totalPrice}₺)
         </Button>
 
-        {/* Snackbar feedback */}
+        {/* Snackbar */}
         <Snackbar
           open={snackbar.open}
           autoHideDuration={4000}
