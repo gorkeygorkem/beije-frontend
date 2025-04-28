@@ -11,27 +11,36 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Visibility, VisibilityOff, WidthFull } from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { signIn, getProfile } from '@/lib/api';
-import { useDispatch } from 'react-redux';
+import { signIn, getProfile, getProductsAndPackets } from '@/lib/api';
+import { useDispatch, useSelector } from 'react-redux';
 import { setToken, setProfile } from '@/store/slices/authSlice';
 import { useRouter } from 'next/router';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Footer from '@/components/Footer';
-
+import Navbar from '@/components/Navbar';
+import { fetchProductsAndPackets } from '@/store/slices/productSlice';
+import { RootState, AppDispatch } from '@/store/index';
 export default function LoginPage() {
   const [tab, setTab] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { products, packets, loading } = useSelector(
+    (state: RootState) => state.products,
+  );
+
+  useEffect(() => {
+    dispatch(fetchProductsAndPackets());
+  }, [dispatch]);
+
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -43,8 +52,6 @@ export default function LoginPage() {
     }
 
     try {
-      setLoading(true);
-
       const res = await signIn(email, password);
       const token = res.data.data.token;
 
@@ -57,12 +64,12 @@ export default function LoginPage() {
     } catch (err: any) {
       setError('E-posta veya şifre hatalı.');
     } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
+      <Navbar products={products} packets={packets} />
       {/* Main layout */}
       <Grid
         container
@@ -80,7 +87,6 @@ export default function LoginPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            p: 4,
           }}>
           <img
             src="/login-products.png"
@@ -88,7 +94,7 @@ export default function LoginPage() {
             style={{
               maxWidth: '100%',
               height: 'auto',
-              objectFit: 'contain',
+              objectFit: 'fill',
               borderRadius: 8,
             }}
           />
