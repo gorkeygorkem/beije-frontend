@@ -12,7 +12,11 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Visibility, VisibilityOff, WidthFull } from '@mui/icons-material';
+import {
+  VisibilityOutlined,
+  VisibilityOffOutlined,
+  WidthFull,
+} from '@mui/icons-material';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { signIn, getProfile, getProductsAndPackets } from '@/lib/api';
@@ -72,27 +76,25 @@ export default function LoginPage() {
         container
         sx={{
           display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, // 1 column on mobile, 2 columns on desktop
+          gridTemplateColumns: { sm: '1fr', md: '1fr 1fr' }, // 1 column on mobile, 2 columns on desktop
           width: '100vw',
           margin: 0,
           padding: 0,
+          bgcolor: 'rgba(247, 246, 245, 1)',
         }}>
         {/* Left Side - Image */}
         <Box
           sx={{
             backgroundColor: '#f5f5f5',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
           }}>
           <img
             src="/login-products.png"
             alt="Beije Product Group"
             style={{
-              maxWidth: '100%',
+              width: '100%',
               height: 'auto',
               objectFit: 'fill',
-              borderRadius: 8,
             }}
           />
         </Box>
@@ -105,41 +107,74 @@ export default function LoginPage() {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            px: { xs: 3, md: 6 },
-            py: 8,
+            px: { xs: 3, md: 20 },
+            py: '50px',
             height: '100%',
           }}>
-          <Typography variant="h5" fontWeight="bold" mb={1}>
-            Merhaba
-          </Typography>
-          <Typography color="text.secondary" mb={3}>
-            beije'ye hoş geldin!
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="h5" fontSize="40px" mb={1}>
+              Merhaba
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography color="text.secondary" fontSize="16px" mb={3}>
+              beije'e hoş geldin!
+            </Typography>
+          </Box>
 
           {/* Tabs */}
           <Tabs
             value={tab}
             onChange={(e, newValue) => setTab(newValue)}
-            sx={{ mb: 3 }}>
+            sx={{
+              mb: 3,
+              '& .MuiTabs-indicator': { backgroundColor: 'black' },
+              '& .MuiTab-root.Mui-selected': {
+                color: 'black',
+              },
+            }}
+            variant="fullWidth">
             <Tab label="Giriş Yap" />
             <Tab label="Üye Ol" />
           </Tabs>
 
           {/* Social Buttons */}
-          <Button
-            fullWidth
-            variant="outlined"
-            startIcon={<GoogleIcon />}
-            sx={{ mb: 2, textTransform: 'none' }}>
-            Google ile Giriş Yap
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            startIcon={<FacebookIcon />}
-            sx={{ mb: 3, textTransform: 'none' }}>
-            Facebook ile Giriş Yap
-          </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Button
+              variant="outlined"
+              startIcon={<GoogleIcon />}
+              sx={{
+                mb: 4,
+                width: '48%',
+                height: '40px',
+                textTransform: 'none',
+                borderRadius: '50px',
+                borderColor: 'black',
+                color: 'black',
+              }}>
+              Google ile Giriş Yap
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<FacebookIcon sx={{ color: '#4267B2' }} />}
+              sx={{
+                mb: 4,
+                width: '48%',
+                height: '40px',
+                textTransform: 'none',
+                borderRadius: '50px',
+                borderColor: 'black',
+                color: 'black',
+              }}>
+              Facebook ile Giriş Yap
+            </Button>
+          </Box>
 
           {/* Email */}
           <TextField
@@ -148,7 +183,22 @@ export default function LoginPage() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            sx={{ mb: 2 }}
+            sx={{
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                '& fieldset': {
+                  borderWidth: '1px',
+                  borderColor: 'black',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'black',
+                },
+              },
+              '& .MuiFormLabel-root': {
+                color: 'black',
+              },
+            }}
           />
 
           {/* Password */}
@@ -164,12 +214,31 @@ export default function LoginPage() {
                   <IconButton
                     onClick={() => setShowPassword((s) => !s)}
                     edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? (
+                      <VisibilityOffOutlined />
+                    ) : (
+                      <VisibilityOutlined />
+                    )}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
-            sx={{ mb: 1 }}
+            sx={{
+              mb: 1,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+                '& fieldset': {
+                  borderWidth: '1px',
+                  borderColor: 'black',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'black',
+                },
+              },
+              '& .MuiFormLabel-root': {
+                color: 'black',
+              },
+            }}
           />
 
           {/* Forgot Password */}
@@ -193,6 +262,8 @@ export default function LoginPage() {
               py: 1.5,
               textTransform: 'none',
               fontWeight: 600,
+              bgcolor: 'black',
+              fontSize: '16px',
             }}>
             {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
           </Button>

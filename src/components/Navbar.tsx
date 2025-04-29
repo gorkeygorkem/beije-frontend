@@ -53,7 +53,7 @@ export default function Navbar() {
             component="a"
             href="/"
             sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image src="/Logo.png" alt="Beije Logo" width={70} height={24} />
+            <Image src="/Logo.svg" alt="Beije Logo" width={70} height={24} />
           </Box>
 
           {/* Navigation Tabs */}
@@ -92,9 +92,10 @@ export default function Navbar() {
                     width: '100vw',
                     bgcolor: 'rgba(247, 246, 245, 1)',
                     px: { xs: 3, md: 12 },
-                    pt: 6,
+                    pt: 1,
                     pb: 4,
                     zIndex: 99,
+                    boxShadow: '5px 5px 10px rgba(0, 0, 0, 0.1)',
                   }}>
                   {/* Ürünler */}
                   <Box mb={6}>
@@ -114,15 +115,15 @@ export default function Navbar() {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            width: 140,
+                            width: 172,
                             cursor: 'pointer',
                           }}>
                           <Image
                             src={product.image}
                             alt={product.title}
-                            width={140}
-                            height={140}
-                            style={{ objectFit: 'cover', borderRadius: 8 }}
+                            width={172}
+                            height={135}
+                            style={{ objectFit: 'cover' }}
                           />
                           <Box
                             sx={{
@@ -132,9 +133,21 @@ export default function Navbar() {
                               width: '100%',
                               mt: 1,
                             }}>
-                            <Typography variant="body2" noWrap>
-                              {product.title}
-                            </Typography>
+                            <Image
+                              src="/hijyenik-standart.svg"
+                              alt="Icon"
+                              width={30}
+                              height={30}
+                            />
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Typography
+                                variant="body2"
+                                noWrap
+                                fontSize={16}
+                                sx={{ ml: 0.5, wordBreak: 'break-word' }}>
+                                {product.title}
+                              </Typography>
+                            </Box>
                             <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
                           </Box>
                         </Box>
@@ -173,6 +186,7 @@ export default function Navbar() {
                         display: 'flex',
                         flexWrap: 'wrap',
                         gap: 4,
+
                         alignItems: 'center',
                       }}>
                       {packets.map((packet) => (
@@ -182,15 +196,15 @@ export default function Navbar() {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            width: 140,
+                            width: 211,
                             cursor: 'pointer',
                           }}>
                           <Image
                             src={packet.image}
                             alt={packet.title}
-                            width={140}
-                            height={140}
-                            style={{ objectFit: 'cover', borderRadius: 8 }}
+                            width={211}
+                            height={135}
+                            style={{ objectFit: 'cover' }}
                           />
                           <Box
                             sx={{
@@ -200,9 +214,20 @@ export default function Navbar() {
                               width: '100%',
                               mt: 1,
                             }}>
-                            <Typography variant="body2" noWrap>
-                              {packet.title}
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Image
+                                src="/tampon.svg"
+                                alt="Icon"
+                                width={30}
+                                height={30}
+                              />
+                              <Typography
+                                variant="body2"
+                                sx={{ ml: 0.5, wordBreak: 'break-word' }}
+                                fontSize={16}>
+                                {packet.title}
+                              </Typography>
+                            </Box>
                             <ArrowForwardIosIcon sx={{ fontSize: 14 }} />
                           </Box>
                         </Box>
@@ -214,19 +239,26 @@ export default function Navbar() {
             </Box>
 
             {/* Other Static Tabs */}
-            {[
-              'Biz Kimiz?',
-              'Bağış Kültürü',
-              'Regl Testi!',
-              'Kendi Paketini Oluştur',
-            ].map((tab, i) => (
-              <Typography
-                key={i}
-                variant="body1"
-                sx={{ fontSize: '16px', cursor: 'pointer', fontWeight: 400 }}>
-                {tab}
-              </Typography>
-            ))}
+            <Box
+              gap={4}
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                flexDirection: { md: 'row' },
+              }}>
+              {[
+                'Biz Kimiz?',
+                'Bağış Kültürü',
+                'Regl Testi!',
+                'Kendi Paketini Oluştur',
+              ].map((tab, i) => (
+                <Typography
+                  key={i}
+                  variant="body1"
+                  sx={{ fontSize: '16px', cursor: 'pointer', fontWeight: 400 }}>
+                  {tab}
+                </Typography>
+              ))}
+            </Box>
           </Box>
         </Box>
 

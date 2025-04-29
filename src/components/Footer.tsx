@@ -24,7 +24,7 @@ export default function Footer() {
       {/* Top Grid */}
       <Box
         display="grid"
-        gridTemplateColumns={{ xs: '1fr', md: '1fr 2fr' }}
+        gridTemplateColumns={{ xs: '1fr', md: '4fr 7fr' }}
         gap={6}>
         {/* Left Section */}
         <Box>
@@ -102,13 +102,14 @@ export default function Footer() {
             ['Biz Kimiz?', 'Blog', 'Sıkça Sorulan Sorular', 'Ekibimize Katıl'],
             ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Spotify'],
           ].map((links, i) => (
-            <Stack spacing={1} key={i}>
+            <Stack spacing={3} key={i}>
               {links.map((text, idx) => (
                 <MuiLink
                   key={idx}
                   href="#"
                   underline="hover"
                   color="inherit"
+                  fontSize={'15px'}
                   variant="body2">
                   {text}
                 </MuiLink>
@@ -130,42 +131,53 @@ export default function Footer() {
         gap={2}
         mb={3}>
         {/* Left - Legal Links */}
-        <Stack direction="row" spacing={2} flexWrap="wrap" fontSize={13}>
-          <Typography variant="body2">
-            2022 beije. Tüm hakları saklıdır.
+
+        <Typography variant="body2">
+          2022 beije. Tüm hakları saklıdır.
+        </Typography>
+        <Stack direction="row" spacing={2} flexWrap="wrap" fontSize={14}>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              KVKK
+            </MuiLink>
           </Typography>
-          <MuiLink href="#" underline="hover" color="inherit">
-            KVKK
-          </MuiLink>
-          <MuiLink href="#" underline="hover" color="inherit">
-            KVKK Başvuru Formu
-          </MuiLink>
-          <MuiLink href="#" underline="hover" color="inherit">
-            Üyelik Sözleşmesi
-          </MuiLink>
-          <MuiLink href="#" underline="hover" color="inherit">
-            Gizlilik Politikası
-          </MuiLink>
-          <MuiLink href="#" underline="hover" color="inherit">
-            Çerez Politikası
-          </MuiLink>
-          <MuiLink href="#" underline="hover" color="inherit">
-            Test Sonuçları
-          </MuiLink>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              KVKK Başvuru Formu
+            </MuiLink>
+          </Typography>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              Üyelik Sözleşmesi
+            </MuiLink>
+          </Typography>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              Gizlilik Politikası
+            </MuiLink>
+          </Typography>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              Çerez Politikası
+            </MuiLink>
+          </Typography>
+          <Typography variant="body2" align="center">
+            <MuiLink href="#" underline="hover" color="inherit">
+              Test Sonuçları
+            </MuiLink>
+          </Typography>
         </Stack>
 
         {/* Right - Language Switcher */}
-        <Typography variant="body2">EN | TR</Typography>
+        <Typography variant="body2">
+          EN | <strong>TR</strong>
+        </Typography>
       </Box>
 
       {/* Payment Logos */}
-      <Box
-        display="flex"
-        justifyContent={{ xs: 'center', md: 'flex-end' }}
-        alignItems="center"
-        gap={2}>
-        <Image src="/payment1.png" alt="mastercard" width={40} height={24} />
-        <Image src="/payment2.png" alt="visa" width={40} height={24} />
+      <Box display="flex" justifyContent="center" alignItems="center" gap={2}>
+        <Image src="/payment2.png" alt="mastercard" width={40} height={24} />
+        <Image src="/payment1.png" alt="visa" width={40} height={24} />
       </Box>
     </Box>
   );
