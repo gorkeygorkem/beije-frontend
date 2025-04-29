@@ -22,7 +22,7 @@ import { RootState } from '@/store/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { verifyPacketPrice } from '@/lib/api';
 import { useDispatch } from 'react-redux';
 import { incrementCart } from '@/store/slices/cartSlice';
@@ -119,18 +119,31 @@ export default function PacketsPage() {
   return (
     <Box
       sx={{
-        px: { xs: 2, md: 12 },
+        px: { xs: 2, md: 60 },
         py: 20,
         display: 'flex',
-        gap: 30,
+        gap: 10,
         bgcolor: 'rgba(247, 246, 245, 1)',
+        margin: 'auto',
       }}>
       {/* Left Side */}
       <Box sx={{ flex: 2 }}>
-        <Typography variant="h5" fontWeight="bold" mb={1}>
+        <Typography
+          variant="h5"
+          fontSize={28}
+          fontWeight="bold"
+          mb={1}
+          display="flex"
+          justifyContent="space-between">
           Kendi Paketini Oluştur
+          <Typography
+            component="span"
+            variant="h6"
+            sx={{ display: 'inline-block', verticalAlign: 'super' }}>
+            Nasıl Çalışır?
+          </Typography>
         </Typography>
-        <Typography color="text.secondary" mb={3}>
+        <Typography fontSize={16} color="text.secondary" mb={3}>
           Döngünün uzunluğuna, kanamanın yoğunluğuna ve kullanmak istediğin
           ürünlere göre kendine özel bir paket oluştur!
         </Typography>
@@ -169,19 +182,33 @@ export default function PacketsPage() {
                 key={product._id}
                 expanded={expandedAccordions.includes(product._id)}
                 onChange={() => handleAccordionToggle(product._id)}
-                sx={{ mb: 2, borderRadius: '16px' }}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography fontWeight="bold">{product.title}</Typography>
-                  {!expandedAccordions.includes(product._id) &&
-                    selectedSubProducts.length > 0 && (
-                      <Typography
-                        ml={60}
-                        variant="body2"
-                        color="text.secondary"
-                        noWrap>
-                        {summaryText}
-                      </Typography>
-                    )}
+                disableGutters
+                elevation={0}
+                square
+                sx={{
+                  mb: 2,
+                  borderRadius: '16px',
+                  border: '1px solid #e0e0e0', // optional: clean border
+                  overflow: 'hidden', // this fixes rounded corners
+                }}>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon sx={{ fontSize: 30 }} />}>
+                  <Typography
+                    fontWeight="bold"
+                    fontSize={20}
+                    sx={{ flexGrow: 1 }}>
+                    {product.title}
+                  </Typography>
+                  {selectedSubProducts.length > 0 && (
+                    <Typography
+                      mt={0.5}
+                      mr={2}
+                      variant="body2"
+                      color="text.secondary"
+                      noWrap>
+                      {summaryText}
+                    </Typography>
+                  )}
                 </AccordionSummary>
                 <AccordionDetails>
                   {product.subProducts.map((subProduct) => (
@@ -193,7 +220,7 @@ export default function PacketsPage() {
                         justifyContent: 'space-between',
                         mb: 2,
                       }}>
-                      <Typography variant="body2" noWrap>
+                      <Typography fontSize={16} variant="body2" noWrap>
                         {subProduct.name}
                       </Typography>
                       <Box
@@ -248,10 +275,25 @@ export default function PacketsPage() {
               px: 2,
               py: 1,
               ml: 15,
-              borderRadius: 10,
+              borderRadius: 2,
               whiteSpace: 'nowrap',
             }}>
-            2 Ayda bir gönderim
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}>
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  bgcolor: 'rgba(14, 185, 179, 1)',
+                  borderRadius: '50%',
+                }}
+              />
+              2 Ayda bir gönderim
+            </Box>
           </Box>
         </Box>
 
@@ -259,8 +301,6 @@ export default function PacketsPage() {
           Kişisel ihtiyacına yönelik istediğin miktarda ürün ekleyerek kendine
           özel paket oluşturabilirsin.
         </Typography>
-
-        <Divider sx={{ mb: 4 }} />
 
         {/* Cart */}
         <Box display="flex" flexDirection="column" gap={2} mb={4}>
@@ -271,7 +311,12 @@ export default function PacketsPage() {
             .map((product) => (
               <Card
                 key={product._id}
-                sx={{ bgcolor: 'white', p: 2, borderRadius: 2 }}>
+                sx={{
+                  bgcolor: 'white',
+                  p: 2,
+                  borderRadius: 2,
+                  boxShadow: '0px 0px 0px 1px rgba(0,0,0,0.12)',
+                }}>
                 <CardContent sx={{ p: 0 }}>
                   <Box
                     sx={{
@@ -280,11 +325,13 @@ export default function PacketsPage() {
                       alignItems: 'center',
                       mb: 1,
                     }}>
-                    <Typography fontWeight="bold">{product.title}</Typography>
+                    <Typography fontSize={18} fontWeight="bold">
+                      {product.title}
+                    </Typography>
                     <IconButton
                       size="small"
                       onClick={() => handleRemoveParentProduct(product._id)}>
-                      <DeleteIcon fontSize="small" />
+                      <DeleteOutlinedIcon fontSize="medium" />
                     </IconButton>
                   </Box>
 
@@ -297,12 +344,18 @@ export default function PacketsPage() {
                           display: 'flex',
                           justifyContent: 'space-between',
                           alignItems: 'center',
-                          mb: 1,
+                          mt: 2,
                         }}>
-                        <Typography variant="body2">
+                        <Typography
+                          fontSize={14}
+                          fontWeight="400"
+                          variant="body2">
                           {cart[subProduct._id]} {subProduct.name}
                         </Typography>
-                        <Typography variant="body2">
+                        <Typography
+                          fontSize={14}
+                          fontWeight="500"
+                          variant="body2">
                           {cart[subProduct._id] * subProduct.price}₺
                         </Typography>
                       </Box>
@@ -323,7 +376,7 @@ export default function PacketsPage() {
             fontWeight: 600,
             borderRadius: 8,
             py: 1.5,
-            backgroundColor: 'black',
+            backgroundColor: 'rgba(52, 49, 49, 1)',
             ':hover': { backgroundColor: '#333' },
           }}>
           Sepete Ekle ({totalPrice}₺)
