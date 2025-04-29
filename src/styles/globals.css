@@ -1,7 +1,16 @@
-/* globals.css */
-html,
+@import 'normalize.css';
+
+:root {
+  --main-bg-color: #ffffff;
+}
+
 body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* prevent scrollbars */
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#__next {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
