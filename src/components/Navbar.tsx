@@ -49,7 +49,12 @@ export default function Navbar() {
         }}>
         {/* Left - Logo and Tabs */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 30 }}>
-          <Image src="/Logo.png" alt="Beije Logo" width={70} height={24} />
+          <Box
+            component="a"
+            href="/"
+            sx={{ display: 'flex', alignItems: 'center' }}>
+            <Image src="/Logo.png" alt="Beije Logo" width={70} height={24} />
+          </Box>
 
           {/* Navigation Tabs */}
 
