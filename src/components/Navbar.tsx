@@ -1,12 +1,14 @@
 'use client';
 
-import { Box, Typography, Fade, IconButton } from '@mui/material';
+import { Box, Typography, Fade, IconButton, Badge } from '@mui/material';
 import Image from 'next/image';
 import { useState } from 'react';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowForwardIcons from '@mui/icons-material/ArrowForward';
 import { ShoppingCartOutlined, PersonOutlined } from '@mui/icons-material';
 import { useAppSelector } from '@/store/hooks'; // or your correct hooks path
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 interface Product {
   _id: string;
@@ -27,6 +29,7 @@ export default function Navbar() {
   // Get products and packets from Redux
   const products = useAppSelector((state) => state.products.products);
   const packets = useAppSelector((state) => state.products.packets);
+  const cartCount = useSelector((state: RootState) => state.cart.count);
 
   return (
     <Box
@@ -34,6 +37,8 @@ export default function Navbar() {
       {/* Navbar */}
       <Box
         sx={{
+          bgcolor: 'rgba(247, 246, 245, 1)',
+
           height: '80px',
           maxWidth: '100vw',
           display: 'flex',
@@ -80,7 +85,7 @@ export default function Navbar() {
                     top: '72px', // height of navbar
                     left: 0,
                     width: '100vw',
-                    bgcolor: 'white',
+                    bgcolor: 'rgba(247, 246, 245, 1)',
                     px: { xs: 3, md: 12 },
                     pt: 6,
                     pb: 4,
@@ -223,7 +228,16 @@ export default function Navbar() {
         {/* Right - Cart and Profile */}
         <Box sx={{ display: 'flex', gap: 2 }}>
           <IconButton>
-            <ShoppingCartOutlined />
+            <Badge
+              badgeContent={cartCount}
+              sx={{
+                '& .MuiBadge-badge': {
+                  bgcolor: 'black',
+                  color: 'white',
+                },
+              }}>
+              <ShoppingCartOutlined />
+            </Badge>
           </IconButton>
           <IconButton>
             <PersonOutlined />

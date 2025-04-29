@@ -24,9 +24,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { verifyPacketPrice } from '@/lib/api';
+import { useDispatch } from 'react-redux';
+import { incrementCart } from '@/store/slices/cartSlice';
 
 export default function PacketsPage() {
   const { products } = useSelector((state: RootState) => state.products);
+  const dispatch = useDispatch();
 
   const [tab, setTab] = useState(0);
   const [expandedAccordions, setExpandedAccordions] = useState<string[]>(
@@ -101,6 +104,7 @@ export default function PacketsPage() {
         message: 'Paket başarıyla doğrulandı!',
         severity: 'success',
       });
+      dispatch(incrementCart());
       setCart({});
     } catch (error) {
       console.error(error);
@@ -116,7 +120,7 @@ export default function PacketsPage() {
     <Box
       sx={{
         px: { xs: 2, md: 12 },
-        py: 8,
+        py: 20,
         display: 'flex',
         gap: 30,
         bgcolor: 'rgba(247, 246, 245, 1)',
@@ -136,9 +140,8 @@ export default function PacketsPage() {
           value={tab}
           onChange={(e, v) => setTab(v)}
           textColor="inherit"
-          indicatorColor="primary"
           variant="fullWidth"
-          sx={{ mb: 4 }}>
+          sx={{ mb: 4, '& .MuiTabs-indicator': { backgroundColor: 'black' } }}>
           <Tab
             label="Menstrual Ürünler"
             sx={{ fontWeight: 600, textTransform: 'none' }}
