@@ -9,7 +9,11 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import Image from 'next/image';
-
+import TwitterIcon from '@mui/icons-material/Twitter';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 export default function Footer() {
   return (
     <Box
@@ -24,8 +28,8 @@ export default function Footer() {
       {/* Top Grid */}
       <Box
         display="grid"
-        gridTemplateColumns={{ xs: '1fr', md: '4fr 7fr' }}
-        gap={6}>
+        gridTemplateColumns={{ xs: '1fr', md: '3fr 2fr' }}
+        gap={0}>
         {/* Left Section */}
         <Box>
           <Typography variant="h6" fontWeight="bold" mb={2}>
@@ -54,6 +58,7 @@ export default function Footer() {
                 '& fieldset': {
                   borderColor: 'white',
                 },
+                maxWidth: '50%',
               }}
             />
             <Button
@@ -96,11 +101,52 @@ export default function Footer() {
         <Box
           display="grid"
           gridTemplateColumns={{ xs: '1fr', sm: 'repeat(3, 1fr)' }}
-          gap={4}>
+          gap={6}>
           {[
             ['beije Ped', 'beije Günlük Ped', 'beije Tampon'],
             ['Biz Kimiz?', 'Blog', 'Sıkça Sorulan Sorular', 'Ekibimize Katıl'],
-            ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Spotify'],
+            [
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                key="Facebook">
+                <FacebookIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">Facebook</Typography>
+              </Stack>,
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                key="Instagram">
+                <InstagramIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">Instagram</Typography>
+              </Stack>,
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                key="Twitter">
+                <TwitterIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">Twitter</Typography>
+              </Stack>,
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                key="LinkedIn">
+                <LinkedInIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">LinkedIn</Typography>
+              </Stack>,
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                key="Spotify">
+                <GraphicEqIcon sx={{ fontSize: 20 }} />
+                <Typography variant="body2">Spotify</Typography>
+              </Stack>,
+            ],
           ].map((links, i) => (
             <Stack spacing={3} key={i}>
               {links.map((text, idx) => (
