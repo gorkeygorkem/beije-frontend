@@ -18,6 +18,8 @@ import {
   CardContent,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
+import Image from 'next/image';
+import Head from 'next/head';
 import { RootState } from '@/store/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
@@ -26,7 +28,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { verifyPacketPrice } from '@/lib/api';
 import { useDispatch } from 'react-redux';
 import { incrementCart } from '@/store/slices/cartSlice';
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
 export default function PacketsPage() {
   const { products } = useSelector((state: RootState) => state.products);
   const dispatch = useDispatch();
@@ -36,6 +38,12 @@ export default function PacketsPage() {
     products.map((p) => p._id),
   ); // Open all initially
   const [cart, setCart] = useState<Record<string, number>>({});
+  const infoTips: Record<string, string> = {
+    'beije Ped':
+      'Çoğu beije kullanıcısı normal yoğunlukta bir regl dönemi için abonelik paketinde 20 Standart, 20 Süper Ped tercih ediyor.',
+    'beije Günlük Pad': `Kullanıcılarımızın %68'i akıntıları olan günlerde Standart Günlük Ped'i, regllerinin son günlerinde veya daha yoğun akıntıları olan günlerde ise Süper Günlük Ped'i tercih ediyor.`,
+  };
+
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -118,11 +126,16 @@ export default function PacketsPage() {
 
   return (
     <Box sx={{ bgcolor: 'rgba(247, 246, 245, 1)', width: '100%' }}>
+      <Head>
+        <title>beije | Kendi Paketini Oluştur</title>
+      </Head>
+
       <Box
         sx={{
           px: { xs: 2, md: 6, lg: 20 }, // smaller on medium, larger on large
           py: 20,
           display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
           gap: 10,
           bgcolor: 'rgba(247, 246, 245, 1)',
           maxWidth: '1440px',
@@ -211,10 +224,18 @@ export default function PacketsPage() {
                           alignItems: 'center',
                           flexWrap: 'wrap',
                         }}>
+                        <Box sx={{ display: 'flex' }}>
+                          <Image
+                            src="/hijyenik-standart.svg"
+                            alt="hijyenik standart"
+                            width={30}
+                            height={30}
+                          />
+                        </Box>
                         <Typography
                           fontWeight="bold"
                           fontSize={20}
-                          sx={{ minWidth: 0, flex: 1 }}>
+                          sx={{ minWidth: 0, flex: 1, ml: 1 }}>
                           {product.title}
                         </Typography>
 
@@ -238,6 +259,25 @@ export default function PacketsPage() {
                   </AccordionSummary>
 
                   <AccordionDetails>
+                    {infoTips[product.title] && (
+                      <Box
+                        sx={{
+                          bgcolor: 'rgba(236, 241, 207, 1)',
+                          color: 'black',
+                          px: 3,
+                          py: 2,
+                          borderRadius: 2,
+                          mb: 3,
+                          display: 'flex',
+                          gap: 1.5,
+                          alignItems: 'flex-start',
+                        }}>
+                        <FavoriteIcon sx={{ color: 'rgba(185, 213, 77, 1)' }} />
+                        <Typography fontSize={16}>
+                          {infoTips[product.title]}
+                        </Typography>
+                      </Box>
+                    )}
                     {product.subProducts.map((subProduct) => (
                       <Box
                         key={subProduct._id}
