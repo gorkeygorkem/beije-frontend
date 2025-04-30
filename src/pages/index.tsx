@@ -27,6 +27,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { fetchProductsAndPackets } from '@/store/slices/productSlice';
 import { RootState, AppDispatch } from '@/store/index';
+import Head from 'next/head';
+
 export default function LoginPage() {
   const [tab, setTab] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
@@ -82,6 +84,9 @@ export default function LoginPage() {
           padding: 0,
           bgcolor: 'rgba(247, 246, 245, 1)',
         }}>
+        <Head>
+          <title>beije </title>
+        </Head>
         {/* Left Side - Image */}
         <Box
           sx={{

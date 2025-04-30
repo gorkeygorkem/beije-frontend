@@ -101,6 +101,7 @@ export default function Navbar() {
                     zIndex: 99,
                     pt: 4,
                     pb: 4,
+                    boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.08)',
                   }}>
                   {/* Centered menu inside */}
                   <Box
