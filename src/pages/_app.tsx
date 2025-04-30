@@ -7,6 +7,27 @@ import { Box } from '@mui/material';
 import { CssBaseline } from '@mui/material';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  /*   
+  //store on localstorage
+
+  //utils/axios.ts
+  axios.interceptors.request.use((config) => {
+    const token = store.getState().auth.token;
+    if (token) {
+      config.headers['x-auth-token'] = token;
+    }
+    return config;
+  });
+
+  //on this page
+  useEffect(() => {
+      const storedToken = localStorage.getItem('authToken');
+      if (storedToken) {
+        dispatch(setToken(storedToken));
+        dispatch(fetchUserProfile());
+      }
+    }, []);
+ */
   return (
     <Provider store={store}>
       <CssBaseline />
